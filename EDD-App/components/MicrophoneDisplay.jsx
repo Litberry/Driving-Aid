@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, PermissionsAndroid } from 'react-native';
-import { AudioRecorder, AudioUtils } from 'react-native-audio';
+import { View, Text, Button, Stylesheet, PermissionsAndroid } from 'react-native';
+import { Audio } from 'expo-av';
 import useMicrophone from '../hooks/useMicrophone';
 
 const MicrophoneDisplay = () => {

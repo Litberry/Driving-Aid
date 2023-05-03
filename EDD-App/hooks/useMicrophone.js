@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, PermissionsAndroid } from 'react-native';
-import { AudioRecorder, AudioUtils } from 'react-native-audio';
+import { View, Text, StyleSheet, Button, PermissionsAndroid } from 'react-native';
+import { Audio } from 'expo-av';
 
 const SOUND_BITE_LENGTH = 3000; // in milliseconds
 
