@@ -50,7 +50,7 @@ const useMicrophone = () => {
     } catch (err) {
       console.warn(err);
     }
-  };
+  }; 
 
   const stopRecording = async () => {
     try {
@@ -87,17 +87,18 @@ const useMicrophone = () => {
     }, SOUND_BITE_LENGTH);
   };
 
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>{recording ? 'Recording' : 'Not Recording'}</Text>
-      <Button
-        title={recording ? 'Stop Recording' : 'Start Recording'}
-        onPress={recording ? stopRecording : startRecording}
-        disabled={recording && soundBites.length >= 10} // limit to 10 sound bites
-      />
-      <Text>{`Sound Bites: ${soundBites.length}`}</Text>
-    </View>
-  );
+  // return (
+    // <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    //   <Text>{recording ? 'Recording' : 'Not Recording'}</Text>
+    //   <Button
+    //     title={recording ? 'Stop Recording' : 'Start Recording'}
+    //     onPress={recording ? stopRecording : startRecording}
+    //     disabled={recording && soundBites.length >= 10} // limit to 10 sound bites
+    //   />
+    //   <Text>{`Sound Bites: ${soundBites.length}`}</Text>
+    // </View>
+  // );
+  return {startRecording, stopRecording}; // returns the most important functions
 };
 
 export default useMicrophone;
