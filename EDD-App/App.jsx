@@ -5,14 +5,18 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import logo from "./assets/logo.png";
 import car from "./assets/car.png";
 import police from "./assets/police.png";
+import useMicrophone from "./hooks/useMicrophone";
+import MicrophoneDisplay from "./components/MicrophoneDisplay";
 
 function App() {
   const [isDriving, setIsDriving] = useState(false);
   const [direction, setDirection] = useState(null);
   const [flashingCell, setFlashingCell] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
 
   const toggleDriving = () => {
     setIsDriving(!isDriving);
+    setIsRecording(!isRecording);
   };
 
   const handleDirectionChange = (newDirection) => {
@@ -55,9 +59,11 @@ function App() {
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.buttonText} onPress={toggleDriving}>
+      <Text style={styles.buttonText} onPressIn={toggleDriving} // changed to onPressIn
+      >
         {isDriving ? "Stop Driving" : "Start Driving"}
       </Text>
+      {isDriving ? <MicrophoneDisplay></MicrophoneDisplay> : null}
       {isDriving && (
         <View style={styles.grid}>
           {[0, 1, 2].map((row) => (
@@ -75,7 +81,7 @@ function App() {
                     <Image source={car} style={styles.car} />
                   )}
                   {flashingCell === row * 3 + col && (
-                    <Image source={police} style={[styles.police, {width: 60, height: 60}]} />
+                    <Image source={police} style={[styles.police, { width: 60, height: 60 }]} />
                   )}
                 </View>
               ))}
@@ -112,32 +118,32 @@ function App() {
           <TouchableOpacity
             style={styles.directionButton}
             onPress={() => handleDirectionChange("S")}
-            >
+          >
             <Text style={styles.directionButtonText}>S</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.directionButton}
             onPress={() => handleDirectionChange("SW")}
-            >
+          >
             <Text style={styles.directionButtonText}>SW</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.directionButton}
             onPress={() => handleDirectionChange("W")}
-            >
+          >
             <Text style={styles.directionButtonText}>W</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.directionButton}
             onPress={() => handleDirectionChange("NW")}
-            >
+          >
             <Text style={styles.directionButtonText}>NW</Text>
-            </TouchableOpacity>
-            </View>
-            )}
-            </View>
-            );
-            }
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
   flashingCell: {
     backgroundColor: "red",
   },
-   car: {
+  car: {
     width: 90,
     height: 50,
     transform: [{ rotate: "-90deg" }]
