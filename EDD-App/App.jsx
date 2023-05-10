@@ -139,6 +139,8 @@ function App() {
           >
             <Text style={styles.directionButtonText}>NW</Text>
           </TouchableOpacity>
+          <MicrophoneDisplay>
+          </MicrophoneDisplay>
         </View>
       )}
     </View>
