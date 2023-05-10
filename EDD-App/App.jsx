@@ -1,22 +1,55 @@
 
 /*This code is a React Native application that displays a grid of cells and a car image that can be moved around the grid. The app has a start/stop button and a set of direction buttons that change a stored direction value. when a direction is selected, an image with filepath ./assets/police.png flashes for three seconds in that corresponding cell? for example, if SE is selected, it flashes in the bottom right cell. this is for react native.*/
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { Audio } from 'expo-av';
 import logo from "./assets/logo.png";
 import car from "./assets/car.png";
 import police from "./assets/police.png";
-import useMicrophone from "./hooks/useMicrophone";
-import MicrophoneDisplay from "./components/MicrophoneDisplay";
+//import useMicrophone from "./hooks/useMicrophone";
+//import MicrophoneDisplay from "./components/MicrophoneDisplay";
 
 function App() {
-  const [isDriving, setIsDriving] = useState(false);
+  const [isDriving, setIsDriving] = useState(true);
   const [direction, setDirection] = useState(null);
   const [flashingCell, setFlashingCell] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
+  //const [isRecording, setIsRecording] = useState(false);
+  const [recording, setRecording] = useState();
+
+  async function startRecording() {
+    try {
+      console.log('Requesting permissions..');
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log('Starting recording..');
+      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log('Recording started');
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  }
+
+  async function stopRecording() {
+    console.log('Stopping recording..');
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+    const uri = recording.getURI();
+    console.log('Recording stopped and stored at', uri);
+  }
 
   const toggleDriving = () => {
     setIsDriving(!isDriving);
-    setIsRecording(!isRecording);
+    //setIsRecording(!isRecording);
+    console.log('changing driving state');
   };
 
   const handleDirectionChange = (newDirection) => {
@@ -63,7 +96,6 @@ function App() {
       >
         {isDriving ? "Stop Driving" : "Start Driving"}
       </Text>
-      {isDriving ? <MicrophoneDisplay></MicrophoneDisplay> : null}
       {isDriving && (
         <View style={styles.grid}>
           {[0, 1, 2].map((row) => (
@@ -139,8 +171,12 @@ function App() {
           >
             <Text style={styles.directionButtonText}>NW</Text>
           </TouchableOpacity>
-          <MicrophoneDisplay>
-          </MicrophoneDisplay>
+          <View style={styles.buttonText}>
+            <Button
+              title={recording ? 'Stop Recording' : 'Start Recording'}
+              onPress={recording ? stopRecording : startRecording}
+            />
+          </View>
         </View>
       )}
     </View>
