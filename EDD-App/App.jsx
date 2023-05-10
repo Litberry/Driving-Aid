@@ -7,46 +7,58 @@ import logo from "./assets/logo.png";
 import car from "./assets/car.png";
 import police from "./assets/police.png";
 //import useMicrophone from "./hooks/useMicrophone";
-//import MicrophoneDisplay from "./components/MicrophoneDisplay";
+import MicrophoneDisplay from "./components/MicrophoneDisplay";
+//import MicStream from 'react-native-microphone-stream';
+
+// const listener = MicStream.addListener(data => console.log(data));
+// MicStream.init({
+//   bufferSize: 4096,
+//   sampleRate: 44100,
+//   bitsPerChannel: 16,
+//   channelsPerFrame: 1,
+// });
+// MicStream.start();
+// ...
+// MicStream.stop();
+// listener.remove();
 
 function App() {
-  const [isDriving, setIsDriving] = useState(true);
+  const [isDriving, setIsDriving] = useState(false);
   const [direction, setDirection] = useState(null);
   const [flashingCell, setFlashingCell] = useState(null);
-  //const [isRecording, setIsRecording] = useState(false);
   const [recording, setRecording] = useState();
 
-  async function startRecording() {
-    try {
-      console.log('Requesting permissions..');
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
+  // async function startRecording() {
+  //   try {
+  //     console.log('Requesting permissions..');
+  //     await Audio.requestPermissionsAsync();
+  //     await Audio.setAudioModeAsync({
+  //       allowsRecordingIOS: true,
+  //       playsInSilentModeIOS: true,
+  //     });
 
-      console.log('Starting recording..');
-      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log('Recording started');
-    } catch (err) {
-      console.error('Failed to start recording', err);
-    }
-  }
+  //     console.log('Starting recording..');
+  //     const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+  //     );
+  //     setRecording(recording);
+  //     console.log('Recording started');
+  //   } catch (err) {
+  //     console.error('Failed to start recording', err);
+  //   }
+  // }
 
-  async function stopRecording() {
-    console.log('Stopping recording..');
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-    });
-    const uri = recording.getURI();
-    console.log('Recording stopped and stored at', uri);
-  }
+  // async function stopRecording() {
+  //   console.log('Stopping recording..');
+  //   setRecording(undefined);
+  //   await recording.stopAndUnloadAsync();
+  //   await Audio.setAudioModeAsync({
+  //     allowsRecordingIOS: false,
+  //   });
+  //   const uri = recording.getURI();
+  //   console.log('Recording stopped and stored at', uri);
+  // }
 
-  const toggleDriving = () => {
+  const toggleDriving = () => { 
     setIsDriving(!isDriving);
     //setIsRecording(!isRecording);
     console.log('changing driving state');
@@ -92,11 +104,11 @@ function App() {
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.logo} />
-      <Text style={styles.buttonText} onPressIn={toggleDriving} // changed to onPressIn
+      <Text style={styles.buttonText} onPress={toggleDriving} // changed to onPressIn; check because this stopped working
       >
         {isDriving ? "Stop Driving" : "Start Driving"}
       </Text>
-      {isDriving && (
+      { isDriving && (
         <View style={styles.grid}>
           {[0, 1, 2].map((row) => (
             <View key={row} style={styles.row}>
@@ -171,12 +183,7 @@ function App() {
           >
             <Text style={styles.directionButtonText}>NW</Text>
           </TouchableOpacity>
-          <View style={styles.buttonText}>
-            <Button
-              title={recording ? 'Stop Recording' : 'Start Recording'}
-              onPress={recording ? stopRecording : startRecording}
-            />
-          </View>
+          <MicrophoneDisplay />
         </View>
       )}
     </View>

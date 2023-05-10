@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Stylesheet, PermissionsAndroid } from 'react-native';
+import { View, Text, Button, StyleSheet, PermissionsAndroid } from 'react-native';
 import { Audio } from 'expo-av';
-// import useMicrophone from '../hooks/useMicrophone';
 
 export default function MicrophoneDisplay() {
   const [recording, setRecording] = useState(false);
@@ -37,7 +36,7 @@ export default function MicrophoneDisplay() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.box}>
       <Button
         title={recording ? 'Stop Recording' : 'Start Recording'}
         onPress={recording ? stopRecording : startRecording}
@@ -47,7 +46,7 @@ export default function MicrophoneDisplay() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  box: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ecf0f1',
